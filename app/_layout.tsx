@@ -1,10 +1,12 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
+import * as Notifications from 'expo-notifications';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
+import { useRouterNotifications } from '@/lib/hooks/useRouterNotifications';
 import { useColorScheme } from '@/components/useColorScheme';
 
 export {
@@ -19,6 +21,14 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -45,6 +55,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  useRouterNotifications();
+
   const colorScheme = useColorScheme();
 
   return (
